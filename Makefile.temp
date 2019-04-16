@@ -1,0 +1,24 @@
+# let x=0; for file in `ls .`; do let x=$x+1; echo "${x}:${file}"; done;
+
+default: help
+
+.PHONY: list
+filelist: ## neatly print all the files for make to touch
+	@echo $(MAKEFILE_LIST)
+
+.PHONY: build
+install: ## run the install commands
+	windows-carrage-cleaner 
+
+.PHONY: cleaner
+windows-carrage-cleaner: ## removes return (^M) from non-windows files, edited in windows.
+	$(shell for file in `ls .`; do sed -i -e "s/\r//g" $$file; done)
+
+.PHONY: shell-lint
+shell-lint: ## lint check for all sh (build) files 
+	shellcheck *.sh */*.sh
+
+.PHONY: coffee
+help: ## A few commands to help you get through the day. 
+	@echo "\n\tProTip:\t\n\n\tStart with command 'make build'. \n\tFurther Information at: $(REPO_URL)\n\n"
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | sed 's/^[^:]*://g' | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'

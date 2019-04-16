@@ -1,0 +1,6 @@
+.git
+vscode.*
+.temp
+.local
+.local/*
+
